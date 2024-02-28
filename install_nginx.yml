@@ -1,0 +1,27 @@
+---
+- name: Install and configure Nginx
+  hosts: web_servers
+  become: yes
+  remote_user: ec2-user
+
+  tasks:
+    - name: Ensure /var/www/html directory exists
+      ansible.builtin.file:
+       path: /var/www/html
+       state: directory
+
+    - name: Install Nginx
+      yum:
+        name: nginx
+        state: present
+
+    - name: Start Nginx service
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+    - name: Deploy webpage
+      copy:
+        src: index.html
+        dest: /var/www/html/index.html
